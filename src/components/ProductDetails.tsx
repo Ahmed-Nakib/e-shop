@@ -7,7 +7,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
   const product = useSelector((state: any) =>
-    state.product.products.find((p) => p.id === Number(id))
+    state.product.products.find((p: any) => p.id === Number(id))
   );
 
   if (!product) {
