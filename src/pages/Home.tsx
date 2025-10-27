@@ -1,8 +1,8 @@
-import AllProduct from "../components/AllProduct"
 import CategorySection from "../components/CategorySection"
 import Hero from "../components/Hero"
 import InfoSection from "../components/InfoSection"
 import TopProduct from "../components/TopProduct"
+import LatestProduct from "../components/LatestProduct"
 
 const Home = () => {
   return (
@@ -11,7 +11,7 @@ const Home = () => {
       <InfoSection />
       <CategorySection />
       <TopProduct />
-      <AllProduct />
+      <LatestProduct />
     </div>
   )
 }

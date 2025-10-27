@@ -1,6 +1,7 @@
 import { Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart, increaseQty, decreaseQty } from "../features/cart/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const cartItems = useSelector((state: any) => state.cart.cartItems);
@@ -10,6 +11,8 @@ const Cart = () => {
     (total: number, item: any) => total + item.price * item.qty,
     0
   );
+
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-10">
@@ -82,7 +85,9 @@ const Cart = () => {
             <span>${totalPrice.toFixed(2)}</span>
           </div>
 
-          <button className="w-full bg-red-600 text-white py-3 sm:py-4 rounded-md text-sm sm:text-base font-semibold hover:bg-red-700 transition">
+          <button
+          onClick={() => navigate("/checkout")}
+           className="w-full bg-red-600 text-white py-3 sm:py-4 rounded-md text-sm sm:text-base font-semibold hover:bg-red-700 transition">
             Proceed to Checkout
           </button>
         </div>

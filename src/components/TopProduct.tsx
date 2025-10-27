@@ -1,8 +1,14 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { addToCart } from "../features/cart/cartSlice";
 
 const TopProduct = () => {
+  const dispatch = useDispatch();
   const products = useSelector((state: any) => state.product.products);
+
+  const handleAddToCart = (product: any) => {
+    dispatch(addToCart(product))
+  }
 
   return (
     <div className="py-12 px-6 bg-gray-50">
@@ -46,7 +52,9 @@ const TopProduct = () => {
                   </span>
                 )}
               </div>
-              <button className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition">
+              <button 
+              onClick={() => handleAddToCart(product)}
+              className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition">
                 Add to Cart
               </button>
             </div>

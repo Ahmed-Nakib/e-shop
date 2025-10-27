@@ -1,17 +1,22 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { addToCart } from "../features/cart/cartSlice";
 
-const AllProduct = () => {
+const LatestProduct = () => {
+  const dispatch = useDispatch();
   const products = useSelector((state: any) => state.product.products);
+  const handleAddToCart =(product: any) => {
+    dispatch(addToCart(product))
+  }
 
   return (
     <div className="py-12 px-6 bg-gray-50">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-        🌟 All Products
+        🌟 Latest Products
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto">
-        {products.map((product: any) => (
+        {products.slice(6, 10).map((product: any) => (
           <div
             key={product.id}
             className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer overflow-hidden group"
@@ -50,7 +55,9 @@ const AllProduct = () => {
                 )}
               </div>
 
-              <button className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition">
+              <button
+              onClick={() => handleAddToCart(product)}
+               className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition">
                 Add to Cart
               </button>
             </div>
@@ -61,4 +68,4 @@ const AllProduct = () => {
   );
 };
 
-export default AllProduct;
+export default LatestProduct;

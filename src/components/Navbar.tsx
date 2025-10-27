@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { FaShoppingCart, FaSearch, FaBars, FaTimes, FaUser } from "react-icons/fa";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const [cartCount] = useState(3); // demo cart count
+  const cartItems = useSelector((state: any) => state.cart.cartItems);
+ const cartCount = cartItems.reduce((total: number, item: any) => total + item.qty, 0);
+
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50 transition-all duration-300">
