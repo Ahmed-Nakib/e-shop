@@ -9,6 +9,7 @@ import ProductDetails from "./components/ProductDetails";
 import Cart from "./pages/Cart";
 import Checkout from "./components/Checkout";
 import OrderConfirmation from "./components/OrderConfirmation";
+import CategoryView from "./components/CategoryView";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/orderConfirmation" element={<OrderConfirmation />} />
+        <Route path="/category/:name" element={<CategoryView />} />
       </Routes>
       <Footer />
     </BrowserRouter>

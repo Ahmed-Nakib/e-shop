@@ -1,27 +1,13 @@
-import { categories } from "../data/data"
+import { useNavigate } from "react-router-dom"
+
 
 
 const Hero = () => {
+  
+  const navigate = useNavigate();
   return (
      <div className="bg-gray-50 ">
       <div className="max-w-7xl mx-auto px-4 py-10">
-        {/* === Shop by Categories === */}
-        <div className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 border-l-4 border-red-500 pl-3">
-            SHOP BY CATEGORIES
-          </h2>
-          <ul className="flex flex-wrap gap-3">
-            {categories.map((category, index) => (
-              <li
-                key={index}
-                className="px-5 py-2 bg-white rounded-full shadow hover:bg-red-500 hover:text-white cursor-pointer transition-all duration-200 text-sm font-medium"
-              >
-                {category}
-              </li>
-            ))}
-          </ul>
-        </div>
-
         {/* === Hero Section === */}
         <div className="flex flex-col md:flex-row items-center justify-between bg-white rounded-2xl shadow-md p-6 md:p-10 overflow-hidden">
           {/* Left Content */}
@@ -32,7 +18,9 @@ const Hero = () => {
             <p className="text-gray-600 text-sm md:text-base">
               MILLIONS+ PRODUCTS • BEST DEALS • FAST DELIVERY 🚀
             </p>
-            <button className="mt-3 px-6 py-2 bg-red-500 text-white font-semibold rounded-full shadow hover:bg-red-600 transition-all">
+            <button 
+            onClick={() => navigate("/shop")}
+            className="mt-3 px-6 py-2 bg-red-500 text-white font-semibold rounded-full shadow hover:bg-red-600 transition-all">
               SHOP NOW
             </button>
           </div>
