@@ -7,7 +7,16 @@ export const categories =  [
     "Automotive"
 ]
 
-export const productsData = [
+export interface Product {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+  rating: number;
+  category: string;
+}
+
+export const productsData: Product[] = [
   { id: 1, name: "Shirt", image: "product.png", price: 1200, rating: 4.5, category: "Men" },
   { id: 2, name: "T-Shirt", image: "product.png", price: 800, rating: 4.2, category: "Men" },
   { id: 3, name: "Jeans", image: "product.png", price: 1800, rating: 4.6, category: "Men" },
@@ -29,4 +38,3 @@ export const productsData = [
   { id: 19, name: "Tie", image: "product.png", price: 500, rating: 4.0, category: "Accessories" },
   { id: 20, name: "Boots", image: "product.png", price: 2800, rating: 4.7, category: "Shoes" },
 ];
-

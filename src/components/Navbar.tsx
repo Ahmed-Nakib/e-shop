@@ -1,101 +1,171 @@
-import { Link } from "react-router-dom";
-import { FaShoppingCart, FaSearch, FaBars, FaTimes, FaUser } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { ShoppingCart, Search, Menu, X, User, Home, Store, Mail, Info } from "lucide-react";
+
+interface CartItem {
+  id: number;
+  name: string;
+  qty: number;
+  price: number;
+}
+
+interface RootState {
+  cart: {
+    cartItems: CartItem[];
+  };
+}
+
+const navItems = [
+  { path: "/", label: "Home", icon: Home },
+  { path: "/shop", label: "Shop", icon: Store },
+  { path: "/contact", label: "Contact", icon: Mail },
+  { path: "/about", label: "About", icon: Info },
+];
 
 const Navbar = () => {
-  const [open, setOpen] = useState(false);
-  const cartItems = useSelector((state: any) => state.cart.cartItems);
- const cartCount = cartItems.reduce((total: number, item: any) => total + item.qty, 0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const cartCount = useMemo(
+    () => cartItems.reduce((total, item) => total + item.qty, 0),
+    [cartItems]
+  );
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
+  const NavLinks = ({ isMobile = false }: { isMobile?: boolean }) => (
+    <div
+      className={`${
+        isMobile
+          ? "flex flex-col items-center gap-4"
+          : "hidden md:flex justify-center items-center gap-6"
+      } py-4 text-sm font-medium text-gray-700`}
+    >
+      {navItems.map((item) => (
+        <NavLink
+          key={item.path}
+          to={item.path}
+          onClick={() => isMobile && setIsOpen(false)}
+          className={({ isActive }) =>
+            `flex items-center gap-2 transition ${
+              isActive ? "text-red-600 font-semibold" : "hover:text-red-600"
+            }`
+          }
+        >
+          {isMobile && <item.icon size={16} className="text-gray-500" />}
+          {item.label}
+        </NavLink>
+      ))}
+    </div>
+  );
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50 transition-all duration-300">
-      {/* === Top Section === */}
-      <div className="flex flex-wrap justify-between items-center px-4 py-3 max-w-7xl mx-auto gap-3">
+    <nav className="bg-white shadow-lg sticky top-0 z-50">
+      <form
+              onSubmit={handleSearch}
+              className="md:hidden flex items-center border border-gray-300 rounded-lg px-3 py-2 mx-4 mt-4"
+            >
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="flex-1 text-sm focus:outline-none"
+              />
+              <button type="submit" aria-label="Search" className="text-gray-500 hover:text-red-600">
+                <Search size={16} />
+              </button>
+            </form>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* === Logo === */}
-        <Link
-          to="/"
-          className="text-2xl font-extrabold tracking-tight text-gray-900"
-        >
-          e<span className="text-red-500">SHOP</span>
-        </Link>
+        {/* Top Header */}
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <NavLink to="/" className="text-3xl font-extrabold tracking-tight text-gray-900">
+            e<span className="text-red-600">SHOP</span>
+          </NavLink>
 
-        {/* === Search bar (always visible) === */}
-        <div className="flex items-center border border-gray-300 rounded-full px-3 py-1 w-full max-w-md flex-1 focus-within:ring-2 focus-within:ring-red-400 transition-all order-3 md:order-none">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="flex-1 px-2 py-1 text-sm focus:outline-none"
-          />
-          <FaSearch className="text-gray-500 hover:text-red-500 cursor-pointer" />
-        </div>
-
-        {/* === Right side buttons === */}
-        <div className="hidden md:flex items-center gap-6">
-          {/* Cart Icon with badge */}
-          <Link to="/cart" className="relative group">
-            <FaShoppingCart
-              className="text-gray-700 group-hover:text-red-500 transition-colors duration-200"
-              size={22}
-            />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-
-          {/* User / Login */}
-          <Link
-            to="/login"
-            className="flex items-center gap-2 text-gray-700 hover:text-red-500 transition-colors duration-200"
+          {/* Search Bar */}
+          <form
+            onSubmit={handleSearch}
+            className="hidden md:flex items-center border border-gray-200 rounded-full px-4 py-2 w-full max-w-lg mx-8 bg-gray-50 shadow-sm focus-within:ring-2 focus-within:ring-red-500"
           >
-            <FaUser /> <span className="text-sm font-medium">Login / Register</span>
-          </Link>
-        </div>
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 text-sm bg-transparent focus:outline-none placeholder-gray-500"
+            />
+            <button type="submit" aria-label="Search" className="text-gray-500 hover:text-red-600">
+              <Search size={16} />
+            </button>
+          </form>
 
-        {/* === Mobile menu toggle === */}
-        <button
-          className="md:hidden text-gray-700"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <FaTimes size={22} /> : <FaBars size={22} />}
-        </button>
-      </div>
-
-      {/* === Navigation Links === */}
-      <div className="border-t bg-white">
-        <div className="max-w-7xl mx-auto flex justify-center items-center gap-6 py-2 text-sm font-medium text-gray-700 flex-wrap">
-          <Link to="/" className="hover:text-red-500" onClick={() => setOpen(false)}>Home</Link>
-          <Link to="/shop" className="hover:text-red-500" onClick={() => setOpen(false)}>Shop</Link>
-          <Link to="/contact" className="hover:text-red-500" onClick={() => setOpen(false)}>Contact</Link>
-          <Link to="/about" className="hover:text-red-500" onClick={() => setOpen(false)}>About</Link>
-        </div>
-      </div>
-
-      {/* === Mobile Menu === */}
-      {open && (
-        <div className="md:hidden bg-white border-t">
-          <div className="flex flex-col items-center gap-5 py-5 text-gray-700 font-medium">
-            {/* Cart link */}
-            <Link to="/cart" className="relative" onClick={() => setOpen(false)}>
-              <FaShoppingCart size={22} className="text-gray-700" />
+          {/* Icons */}
+          <div className="flex items-center gap-4">
+            {/* Cart */}
+            <NavLink to="/cart" className="relative group p-2 rounded-full hover:bg-red-50">
+              <ShoppingCart className="text-gray-700 group-hover:text-red-600" size={22} />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md border-2 border-white">
                   {cartCount}
                 </span>
               )}
-            </Link>
+            </NavLink>
 
             {/* Login */}
-            <Link to="/login" onClick={() => setOpen(false)} className="flex items-center gap-2">
-              <FaUser /> Login / Register
-            </Link>
+            <NavLink
+              to="/login"
+              className="hidden sm:flex items-center gap-2 text-gray-700 hover:text-red-600 text-sm font-semibold p-2 rounded-lg hover:bg-gray-100"
+            >
+              <User size={18} />
+              <span className="hidden lg:inline">Login / Register</span>
+            </NavLink>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden text-gray-700 p-2 rounded-lg hover:bg-gray-100"
+            >
+              {isOpen ? <X size={24} className="text-red-600" /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
-      )}
+
+        {/* Desktop Nav Links */}
+        <div className="border-t border-gray-100 hidden md:block">
+          <NavLinks />
+        </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="md:hidden border-t border-gray-100 py-4 bg-white shadow-inner">
+            {/* Mobile Search */}
+            
+
+            {/* Mobile Nav Links */}
+            <NavLinks isMobile />
+
+            {/* Mobile Login Button */}
+            <NavLink
+              to="/login"
+              onClick={() => setIsOpen(false)}
+              className="flex justify-center items-center gap-3 p-3 mt-4 mx-4 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 transition duration-200 shadow-md"
+            >
+              <User size={18} /> Login / Register
+            </NavLink>
+          </div>
+        )}
+      </div>
     </nav>
   );
 };

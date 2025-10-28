@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { Truck, HelpCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../features/cart/cartSlice";
 
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
+  const dispatch = useDispatch()
+
   const product = useSelector((state: any) =>
     state.product.products.find((p: any) => p.id === Number(id))
   );
+  
+  const handleAddToCart = (product: any) => {
+    dispatch(addToCart(product))
+  }
 
   if (!product) {
     return <p className="text-center mt-10 text-red-400">Product not found</p>;
@@ -38,7 +45,9 @@ const ProductDetails = () => {
             onChange={(e) => setQuantity(Number(e.target.value))}
             className="w-16 p-2 border rounded"
           />
-          <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
+          <button
+          onClick={() => handleAddToCart(product)}
+           className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
             Add to Cart
           </button>
         </div>
